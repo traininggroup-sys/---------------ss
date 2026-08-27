@@ -1,505 +1,775 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>اختبار إلكتروني - الجهاز المركزي</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      direction: rtl;
-      font-weight: 900;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      background-color: #f8f9fa;
-      margin: 0;
-      padding: 20px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .card {
-      max-width: 550px;
-      margin: 30px auto;
-      padding: 30px;
-      background-color: #ffffff;
-      border: 2px solid #007bff;
-      border-radius: 15px;
-      box-shadow: 0 5px 25px rgba(0, 123, 255, 0.15);
-      text-align: center;
-      position: relative;
-    }
-
-    label {
-      display: block;
-      font-size: 18px;
-      color: #333;
-      margin-bottom: 8px;
-      text-align: right;
-    }
-
-    input[type="password"], input[type="number"] {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-sizing: border-box;
-    }
-
-    .btn {
-      width: 100%;
-      background-color: #007bff;
-      color: white;
-      padding: 12px 0;
-      font-size: 18px;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      margin-top: 10px;
-      display: inline-block;
-      text-decoration: none;
-      box-sizing: border-box;
-    }
-
-    .btn:hover {
-      background-color: #0056b3;
-    }
-
-    .btn-study {
-      background-color: #28a745;
-    }
-
-    .btn-study:hover {
-      background-color: #218838;
-    }
-
-    #timer {
-      font-size: 20px;
-      color: red;
-      font-weight: bold;
-      text-align: left;
-    }
-
-    .section-badge {
-      display: inline-block;
-      background-color: #17a2b8;
-      color: white;
-      padding: 5px 15px;
-      border-radius: 20px;
-      font-size: 16px;
-      margin-bottom: 15px;
-    }
-
-    .option-label {
-      display: block;
-      background-color: #f0f4f8;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      text-align: right;
-      transition: background 0.2s;
-    }
-
-    .option-label:hover {
-      background-color: #e2e8f0;
-    }
-
-    .correct-answer {
-      color: green;
-      font-weight: 900;
-    }
-
-    .wrong-answer {
-      color: red;
-      font-weight: 900;
-    }
-
-    ul {
-      list-style-type: none;
-      padding: 0;
-      text-align: right;
-    }
-
-    ul li {
-      margin-bottom: 15px;
-      background-color: #f8f9fa;
-      padding: 12px;
-      border: 1px solid #dee2e6;
-      border-radius: 6px;
-      font-weight: 900;
-      color: #000;
-      font-size: 16px;
-    }
-
-    .result-box {
-      background-color: #e9ecef;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      text-align: right;
-    }
-
-    .result-box h3 {
-      margin-top: 0;
-      color: #007bff;
-    }
-
-    .status-text {
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .motivation-quote {
-      background-color: #fff3cd;
-      color: #856404;
-      border: 1px dashed #ffeeba;
-      padding: 15px;
-      border-radius: 10px;
-      font-size: 18px;
-      margin: 15px 0;
-      line-height: 1.6;
-    }
-
-    #next-button {
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-
-<h2 style="text-align: center;">التدريب علي اختبارات الجهاز المركزى</h2>
-
-<!-- شاشة التسجيل -->
-<div id="login-container" class="card">
-  <label for="password">🔒 أدخل كلمة المرور:</label>
-  <input id="password" type="password" placeholder="أدخل كلمة السر" />
-  <label for="duration">⏳ مدة كل قسم (بالدقائق):</label>
-  <input id="duration" type="number" value="5" min="1" />
-  <button class="btn" onclick="checkPassword()">🚀 دخول والاختبار</button>
-</div>
-
-<!-- شاشة الأسئلة -->
-<div id="quiz" class="card hidden">
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <span id="section-title" class="section-badge">قسم المعلومات العامة</span>
-    <div id="timer">05:00</div>
-  </div>
-  <div id="question-info" style="text-align: right; margin-bottom: 10px;">السؤال 1</div>
-  <form id="quizForm">
-    <div id="question-container"></div>
-    <button id="next-button" class="btn" onclick="nextQuestion(event)" type="button">التالي ➔</button>
-  </form>
-</div>
-
-<!-- شاشة الانتقال بين الأقسام -->
-<div id="transition-container" class="card hidden">
-  <h2 id="transition-header">🎉 أحسنت! أكملت القسم بنجاح</h2>
-  
-  <div id="motivation-text" class="motivation-quote"></div>
-
-  <p id="transition-subtext">اضغط على الزر أدناه للبدء في القسم التالي.</p>
-  <button id="transition-btn" class="btn" onclick="startNextSection()">🚀 ابدأ القسم التالي</button>
-</div>
-
-<!-- شاشة النتيجة النهائية -->
-<div id="result" class="card hidden" style="max-width: 650px;"></div>
-
-<script>
-  // 1. أسئلة قسم المعلومات العامة
-  const allGeneralQuestions = [
-    { "question": "الساق المدادة هل تنمو رأسيًا؟", "options": ["صح", "خطأ"], "answer": "خطأ", "explanation": "الساق المدادة تنمو أفقيًا على سطح الأرض وليس رأسيًا." },
-    { "question": "بعد هزيمة ٦٧ هل تعاونت مصر مع سوريا عسكرياً؟", "options": ["صح", "خطأ"], "answer": "صح", "explanation": "بعد هزيمة 1967، تم التنسيق العسكري بين مصر وسوريا تحضيرًا لحرب أكتوبر 1973." },
-    { "question": "عاصمة مصر هي القاهرة؟", "options": ["صح", "خطأ"], "answer": "صح", "explanation": "القاهرة هي عاصمة جمهورية مصر العربية." },
-    { "question": "يصب نهر النيل في البحر الأحمر؟", "options": ["صح", "خطأ"], "answer": "خطأ", "explanation": "يصب نهر النيل في البحر الأبيض المتوسط." },
-    { "question": "أكبر قارة في العالم من حيث المساحة هي قارة آسيا؟", "options": ["صح", "خطأ"], "answer": "صح", "explanation": "قارة آسيا هي أكبر قارات العالم مساحة وسكاناً." }
-  ];
-
-  // 2. أسئلة قسم الحاسب الآلي
-  const allComputerQuestions = [
-    { "question": "اختصار النسخ في لوحة المفاتيح هو Ctrl + C؟", "options": ["صح", "خطأ"], "answer": "صح", "explanation": "Ctrl + C يُستخدم للنسخ (Copy)." },
-    { "question": "تعتبر الشاشة من وحدات الإدخال في الحاسوب؟", "options": ["صح", "خطأ"], "answer": "خطأ", "explanation": "الشاشة من وحدات الإخراج (Output Devices)." },
-    { "question": "الذاكرة RAM تقتصر على الاحتفاظ بالبيانات حتى عند إيقاف التشغيل؟", "options": ["صح", "خطأ"], "answer": "خطأ", "explanation": "ذاكرة RAM هي ذاكرة مؤقتة تفقد بياناتها عند انقطاع الكهرباء." },
-    { "question": "أي مما يلي يُعد نظام تشغيل؟", "options": ["Windows", "Word", "Excel", "Google Chrome"], "answer": "Windows", "explanation": "Windows هو نظام تشغيل بينما البقية برامج وتطبيقات." },
-    { "question": "اختصار الطباعة في معظم البرامج هو Ctrl + P؟", "options": ["صح", "خطأ"], "answer": "صح", "explanation": "Ctrl + P يُستخدم للطباعة (Print)." }
-  ];
-
-  // 3. أسئلة قسم اللغة العربية
-  const allArabicQuestions = [
-    { "question": "الفاعل في اللغة العربية يكون دائماً؟", "options": ["مرفوعاً", "منصوباً", "مجروراً", "مجزوماً"], "answer": "مرفوعاً", "explanation": "الفاعل حكمه الإعرابي الرفع دائماً." },
-    { "question": "جمع كلمة 'كتاب' هو؟", "options": ["كتب", "كاتبون", "مكتبات", "كتّاب"], "answer": "كتب", "explanation": "جمع التكسير لكلمة كتاب هو كتب." },
-    { "question": "كان وأخواتها تدخل على الجملة الاسمية فـ؟", "options": ["ترفع المبتدأ وتنصب الخبر", "تنصب المبتدأ وترفع الخبر", "ترفع المبتدأ والخبر", "تنصب المبتدأ والخبر"], "answer": "ترفع المبتدأ وتنصب الخبر", "explanation": "كان وأخواتها أفعال ناسخة ترفع المبتدأ وتنصب الخبر." },
-    { "question": "مفرد كلمة 'علماء' هو؟", "options": ["عالم", "عليم", "معلم", "علم"], "answer": "عالم", "explanation": "مفرد علماء هو عالم." },
-    { "question": "حروف الجر تدخل على الأسئلة والأفعال؟", "options": ["صح", "خطأ"], "answer": "خطأ", "explanation": "حروف الجر تدخل على الأسماء فقط." }
-  ];
-
-  // 4. أسئلة قسم التربوي
-  const allPedagogyQuestions = [
-    { "question": "من مراعاة الفروق الفردية تنويع طرق التدريس؟", "options": ["صح", "خطأ"], "answer": "صح", "explanation": "تنويع الاستراتيجيات يساعد في مخاطبة جميع أنماط المتعلمين." },
-    { "question": "التعزيز الإيجابي يؤدي إلى تكرار السلوك المرغوب فيه؟", "options": ["صح", "خطأ"], "answer": "صح", "explanation": "التعزيز يشجع الطالب على تكرار السلوكيات الحيوية والجيدة." },
-    { "question": "التقويم التكويني يتم فقط في نهاية الفصل الدراسي؟", "options": ["صح", "خطأ"], "answer": "خطأ", "explanation": "التقويم التكويني المستمر يرافق العملية التعليمية من بدايتها لنهايتها." },
-    { "question": "الهدف السلوكي الإجرائي يجب أن يكون قابلاً للقياس؟", "options": ["صح", "خطأ"], "answer": "صح", "explanation": "يجب أن يصف الهدف السلوكي أداءً يسهل ملاحظته وقياسه." },
-    { "question": "أول مراحل النمو المعرفي عند جان بياجيه هي؟", "options": ["المرحلة الحس حركية", "مرحلة العمليات المادية", "مرحلة ما قبل العمليات", "مرحلة العمليات المجردة"], "answer": "المرحلة الحس حركية", "explanation": "تبدأ من الميلاد وحتى عمر سنتين." }
-  ];
-
-  // ترتيب الأقسام المطلوب
-  const sectionsOrder = [
-    { id: "general", title: "قسم المعلومات العامة", data: allGeneralQuestions },
-    { id: "computer", title: "قسم الحاسب الآلي", data: allComputerQuestions },
-    { id: "arabic", title: "قسم اللغة العربية", data: allArabicQuestions },
-    { id: "pedagogy", title: "قسم التربوي", data: allPedagogyQuestions }
-  ];
-
-  const motivationQuotes = [
-    "💡 عايز أقولك على حاجة: لازم تنجحي وتتفوقي عشان يكون معاكي فلوس واستقلالية! 💰",
-    "🚀 افتكري دايماً.. التعب بتاع النهاردة هو الرفاهية وراحة البال بتاعة بكرة! 🌟",
-    "✨ مفيش حلم بيتحقق بالصدفة، كل خطوة بتحليها بتقربك من هدفك والوظيفة! 💼",
-    "💪 خليكي قوية وكملي للأخر، النجاح يليق بيكي وبمجهودك! ❤️",
-    "🎯 المستقبل المستقل بيتبني دلوقتي، ركزي في القسم اللي جاي وهتكسري الدنيا! 🔥",
-    "👑 اشتغلي على نفسك لحد ما تبقي فخورة باللي وصلتيله ومستقلة تماماً! ✨"
-  ];
-
-  const QUESTIONS_PER_SECTION = 5;
-  let currentSectionIndex = 0;
-  let currentQuestionsList = [];
-  let currentQuestionIndex = 0;
-  
-  let sectionScores = { general: 0, computer: 0, arabic: 0, pedagogy: 0 };
-  let userAnswers = { general: [], computer: [], arabic: [], pedagogy: [] };
-  let selectedQuestions = {};
-
-  let timer;
-  let timeLeft;
-  let sectionDurationMinutes = 5;
-
-  function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
-
-  function getRandomQuestions(sourceArray, count) {
-    let arrayCopy = JSON.parse(JSON.stringify(sourceArray));
-    shuffle(arrayCopy);
-    let selected = arrayCopy.slice(0, count);
-    selected.forEach(q => shuffle(q.options));
-    return selected;
-  }
-
-  function checkPassword() {
-    const passwordInput = document.getElementById("password").value;
-    sectionDurationMinutes = parseInt(document.getElementById("duration").value) || 5;
-
-    if (passwordInput === "20172017") {
-      document.getElementById("login-container").classList.add("hidden");
-      
-      // تجهيز أسئلة كل الأقسام
-      sectionsOrder.forEach(sec => {
-        selectedQuestions[sec.id] = getRandomQuestions(sec.data, QUESTIONS_PER_SECTION);
-      });
-
-      currentSectionIndex = 0;
-      startSection(currentSectionIndex);
-    } else {
-      alert("🚫 المحاولة غير صحيحة! تأكد من كتابة كلمة السر بشكل دقيق.");
-    }
-  }
-
-  function startSection(index) {
-    const sec = sectionsOrder[index];
-    currentQuestionsList = selectedQuestions[sec.id];
-
-    currentQuestionIndex = 0;
-    sectionScores[sec.id] = 0;
-    userAnswers[sec.id] = [];
-
-    document.getElementById("section-title").textContent = sec.title;
-    document.getElementById("quiz").classList.remove("hidden");
-    
-    loadQuestion();
-    startTimer();
-  }
-
-  function showTransition() {
-    clearInterval(timer);
-    document.getElementById("quiz").classList.add("hidden");
-    
-    const currentSecTitle = sectionsOrder[currentSectionIndex].title;
-    const nextSecTitle = sectionsOrder[currentSectionIndex + 1].title;
-
-    document.getElementById("transition-header").textContent = `🎉 أحسنت! أكملت ${currentSecTitle} بنجاح`;
-    document.getElementById("transition-subtext").textContent = `اضغط على الزر أدناه للبدء في **${nextSecTitle}**.`;
-
-    const randomIndex = Math.floor(Math.random() * motivationQuotes.length);
-    document.getElementById("motivation-text").innerHTML = motivationQuotes[randomIndex];
-
-    document.getElementById("transition-container").classList.remove("hidden");
-  }
-
-  function startNextSection() {
-    document.getElementById("transition-container").classList.add("hidden");
-    currentSectionIndex++;
-    startSection(currentSectionIndex);
-  }
-
-  function loadQuestion() {
-    const q = currentQuestionsList[currentQuestionIndex];
-    const questionContainer = document.getElementById("question-container");
-    
-    questionContainer.innerHTML = `
-      <h3 style="text-align: right;">${q.question}</h3>
-      ${q.options.map((option) => `
-        <label class="option-label">
-          <input type="radio" name="option" value="${option}" />
-          ${option}
-        </label>
-      `).join('')}
-    `;
-    
-    document.getElementById("question-info").textContent = `السؤال ${currentQuestionIndex + 1} من ${currentQuestionsList.length}`;
-  }
-
-  function nextQuestion(event) {
-    if(event) event.preventDefault();
-    
-    const selected = document.querySelector('input[name="option"]:checked');
-    if (!selected) return alert("اختر إجابة قبل الانتقال للسؤال التالي.");
-
-    const secId = sectionsOrder[currentSectionIndex].id;
-    const answerValue = selected.value;
-    const isCorrect = answerValue === currentQuestionsList[currentQuestionIndex].answer;
-
-    userAnswers[secId][currentQuestionIndex] = answerValue;
-    if (isCorrect) sectionScores[secId]++;
-
-    currentQuestionIndex++;
-
-    if (currentQuestionIndex < currentQuestionsList.length) {
-      loadQuestion();
-    } else {
-      if (currentSectionIndex < sectionsOrder.length - 1) {
-        showTransition();
-      } else {
-        clearInterval(timer);
-        showFinalResults();
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>اختبار إلكتروني - الجهاز المركزي</title>
+    <style>
+      * {
+        box-sizing: border-box;
       }
-    }
-  }
 
-  function startTimer() {
-    clearInterval(timer);
-    timeLeft = sectionDurationMinutes * 60;
-    
-    timer = setInterval(() => {
-      timeLeft--;
-      const minutes = Math.floor(timeLeft / 60);
-      const seconds = timeLeft % 60;
-      document.getElementById("timer").textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-      
-      if (timeLeft <= 0) {
-        clearInterval(timer);
-        alert("⏰ انتهى الوقت المحدد لهذا القسم!");
-        
-        if (currentSectionIndex < sectionsOrder.length - 1) {
-          showTransition();
-        } else {
-          showFinalResults(true);
+      body {
+        font-family: "Cairo", Arial, sans-serif;
+        direction: rtl;
+        font-weight: 700;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: #f0f4f8;
+        margin: 0;
+        padding: 10px;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .card {
+        background: #ffffff;
+        width: 100%;
+        max-width: 600px;
+        margin: 10px auto;
+        padding: 18px;
+        text-align: center;
+        position: relative;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      }
+
+      label {
+        display: block;
+        font-size: 15px;
+        color: #333;
+        margin-bottom: 8px;
+        text-align: right;
+      }
+
+      input[type="password"],
+      input[type="number"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        font-size: 16px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        outline: none;
+        transition: border-color 0.3s;
+        -webkit-appearance: none;
+      }
+
+      input[type="password"]:focus,
+      input[type="number"]:focus {
+        border-color: #007bff;
+      }
+
+      .btn {
+        width: 100%;
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        padding: 14px 0;
+        font-size: 17px;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          opacity 0.3s;
+        margin-top: 10px;
+        display: inline-block;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .btn-study {
+        background: linear-gradient(135deg, #28a745, #218838);
+        display: flex;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+      }
+
+      .quiz-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8fafc;
+        padding: 10px 14px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #e2e8f0;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      #timer {
+        font-size: 16px;
+        color: #dc3545;
+        font-weight: 800;
+        background: #fff5f5;
+        padding: 5px 10px;
+        border-radius: 8px;
+        border: 1px solid #feb2b2;
+      }
+
+      .section-badge {
+        background-color: #007bff;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .option-label {
+        display: flex;
+        align-items: center;
+        background-color: #f8fafc;
+        border: 2px solid #e2e8f0;
+        padding: 12px 14px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        text-align: right;
+        font-size: 15px;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .option-label input[type="radio"] {
+        margin-left: 12px;
+        width: 18px;
+        height: 18px;
+        accent-color: #007bff;
+      }
+
+      .option-label:active {
+        background-color: #edf2f7;
+      }
+
+      .correct-answer {
+        color: #28a745;
+        font-weight: 900;
+      }
+
+      .wrong-answer {
+        color: #dc3545;
+        font-weight: 900;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        text-align: right;
+      }
+
+      ul li {
+        margin-bottom: 12px;
+        background-color: #f8f9fa;
+        padding: 12px;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        font-weight: 700;
+        color: #000;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .result-box {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        text-align: right;
+      }
+
+      .result-box h3 {
+        margin-top: 0;
+        color: #007bff;
+        font-size: 17px;
+      }
+
+      .status-text {
+        font-size: 15px;
+        font-weight: bold;
+        display: inline-block;
+        margin-top: 5px;
+      }
+
+      .motivation-quote {
+        background-color: #fffdf0;
+        color: #856404;
+        border: 1px dashed #ffeeba;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 15px;
+        margin: 12px 0;
+        line-height: 1.6;
+      }
+
+      .logo-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 10px 0;
+      }
+
+      .logo-container img {
+        width: 75px;
+        height: 75px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #007bff;
+        margin-bottom: 6px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo-container h2 {
+        margin: 0;
+        text-align: center;
+        font-size: 20px;
+        color: #333;
+      }
+
+      #question-info {
+        text-align: right;
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 6px;
+        font-weight: bold;
+      }
+
+      #question-container h3 {
+        font-size: 16px !important;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo-container">
+      <img
+        src="photo_2026-08-03_15-09-55.jpg"
+        alt="قناة أسئلة الجهاز المركزي"
+      />
+      <h2>أسئلة الجهاز المركزي</h2>
+    </div>
+
+    <!-- شاشة التسجيل -->
+    <div id="login-container" class="card">
+      <label for="password">🔒 أدخل كلمة المرور:</label>
+      <input id="password" type="password" placeholder="أدخل كلمة السر" />
+      <label for="duration">⏳ مدة كل قسم (بالدقائق):</label>
+      <input id="duration" type="number" value="5" min="1" />
+      <button class="btn" onclick="checkPassword()">🚀 دخول والاختبار</button>
+    </div>
+
+    <!-- شاشة الأسئلة -->
+    <div id="quiz" class="card hidden">
+      <div class="quiz-header">
+        <span id="section-title" class="section-badge"
+          >قسم المعلومات العامة</span
+        >
+        <div id="timer">05:00</div>
+      </div>
+      <div id="question-info">السؤال 1</div>
+      <form id="quizForm">
+        <div id="question-container"></div>
+        <button
+          id="next-button"
+          class="btn"
+          onclick="nextQuestion(event)"
+          type="button"
+        >
+          التالي ➔
+        </button>
+      </form>
+    </div>
+
+    <!-- شاشة الانتقال بين الأقسام -->
+    <div id="transition-container" class="card hidden">
+      <div id="motivation-text" class="motivation-quote"></div>
+      <button id="transition-btn" class="btn" onclick="startNextSection()">
+        🚀 ابدأ القسم التالي
+      </button>
+    </div>
+
+    <!-- شاشة النتيجة النهائية -->
+    <div id="result" class="card hidden"></div>
+
+    <script>
+      const allGeneralQuestions = [
+        {
+          question: "الساق المدادة هل تنمو رأسيًا؟",
+          options: ["صح", "خطأ"],
+          answer: "خطأ",
+          explanation: "الساق المدادة تنمو أفقيًا على سطح الأرض وليس رأسيًا.",
+        },
+        {
+          question: "بعد هزيمة ٦٧ هل تعاونت مصر مع سوريا عسكرياً؟",
+          options: ["صح", "خطأ"],
+          answer: "صح",
+          explanation:
+            "بعد هزيمة 1967، تم التنسيق العسكري بين مصر سوريا تحضيرًا لحرب أكتوبر 1973.",
+        },
+        {
+          question: "عاصمة مصر هي القاهرة؟",
+          options: ["صح", "خطأ"],
+          answer: "صح",
+          explanation: "القاهرة هي عاصمة جمهورية مصر العربية.",
+        },
+        {
+          question: "يصب نهر النيل في البحر الأحمر؟",
+          options: ["صح", "خطأ"],
+          answer: "خطأ",
+          explanation: "يصب نهر النيل في البحر الأبيض المتوسط.",
+        },
+        {
+          question: "أكبر قارة في العالم من حيث المساحة هي قارة آسيا؟",
+          options: ["صح", "خطأ"],
+          answer: "صح",
+          explanation: "قارة آسيا هي أكبر قارات العالم مساحة وسكاناً.",
+        },
+      ];
+
+      const allComputerQuestions = [
+        {
+          question: "اختصار النسخ في لوحة المفاتيح هو Ctrl + C؟",
+          options: ["صح", "خطأ"],
+          answer: "صح",
+          explanation: "Ctrl + C يُستخدم للنسخ (Copy).",
+        },
+        {
+          question: "تعتبر الشاشة من وحدات الإدخال في الحاسوب؟",
+          options: ["صح", "خطأ"],
+          answer: "خطأ",
+          explanation: "الشاشة من وحدات الإخراج (Output Devices).",
+        },
+        {
+          question:
+            "الذاكرة RAM تقتصر على الاحتفاظ بالبيانات حتى عند إيقاف التشغيل؟",
+          options: ["صح", "خطأ"],
+          answer: "خطأ",
+          explanation:
+            "ذاكرة RAM هي ذاكرة مؤقتة تفقد بياناتها عند انقطاع الكهرباء.",
+        },
+        {
+          question: "أي مما يلي يُعد نظام تشغيل؟",
+          options: ["Windows", "Word", "Excel", "Google Chrome"],
+          answer: "Windows",
+          explanation: "Windows هو نظام تشغيل بينما البقية برامج وتطبيقات.",
+        },
+        {
+          question: "اختصار الطباعة في معظم البرامج هو Ctrl + P؟",
+          options: ["صح", "خطأ"],
+          answer: "صح",
+          explanation: "Ctrl + P يُستخدم للطباعة (Print).",
+        },
+      ];
+
+      const allArabicQuestions = [
+        {
+          question: "الفاعل في اللغة العربية يكون دائماً؟",
+          options: ["مرفوعاً", "منصوباً", "مجروراً", "مجزوماً"],
+          answer: "مرفوعاً",
+          explanation: "الفاعل حكمه الإعرابي الرفع دائماً.",
+        },
+        {
+          question: "جمع كلمة 'كتاب' هو؟",
+          options: ["كتب", "كاتبون", "مكتبات", "كتّاب"],
+          answer: "كتب",
+          explanation: "جمع التكسير لكلمة كتاب هو كتب.",
+        },
+        {
+          question: "كان وأخواتها تدخل على الجملة الاسمية فـ؟",
+          options: [
+            "ترفع المبتدأ وتنصب الخبر",
+            "تنصب المبتدأ وترفع الخبر",
+            "ترفع المبتدأ والخبر",
+            "تنصب المبتدأ والخبر",
+          ],
+          answer: "ترفع المبتدأ وتنصب الخبر",
+          explanation: "كان وأخواتها أفعال ناسخة ترفع المبتدأ وتنصب الخبر.",
+        },
+        {
+          question: "مفرد كلمة 'علماء' هو؟",
+          options: ["عالم", "عليم", "معلم", "علم"],
+          answer: "عالم",
+          explanation: "مفرد علماء هو عالم.",
+        },
+        {
+          question: "حروف الجر تدخل على الأسئلة والأفعال؟",
+          options: ["صح", "خطأ"],
+          answer: "خطأ",
+          explanation: "حروف الجر تدخل على الأسماء فقط.",
+        },
+      ];
+
+      const allPedagogyQuestions = [
+        {
+          question: "من مراعاة الفروق الفردية تنويع طرق التدريس؟",
+          options: ["صح", "خطأ"],
+          answer: "صح",
+          explanation:
+            "تنويع الاستراتيجيات يساعد في مخاطبة جميع أنماط المتعلمين.",
+        },
+        {
+          question: "التعزيز الإيجابي يؤدي إلى تكرار السلوك المرغوب فيه؟",
+          options: ["صح", "خطأ"],
+          answer: "صح",
+          explanation:
+            "التعزيز يشجع الطالب على تكرار السلوكيات الحيوية والجيدة.",
+        },
+        {
+          question: "التقويم التكويني يتم فقط في نهاية الفصل الدراسي؟",
+          options: ["صح", "خطأ"],
+          answer: "خطأ",
+          explanation:
+            "التقويم التكويني المستمر يرافق العملية التعليمية من بدايتها لنهايتها.",
+        },
+        {
+          question: "الهدف السلوكي الإجرائي يجب أن يكون قابلاً للقياس؟",
+          options: ["صح", "خطأ"],
+          answer: "صح",
+          explanation: "يجب أن يصف الهدف السلوكي أداءً يسهل ملاحظته وقياسه.",
+        },
+        {
+          question: "أول مراحل النمو المعرفي عند جان بياجيه هي؟",
+          options: [
+            "المرحلة الحس حركية",
+            "مرحلة العمليات المادية",
+            "مرحلة ما قبل العمليات",
+            "مرحلة العمليات المجردة",
+          ],
+          answer: "المرحلة الحس حركية",
+          explanation: "تبدأ من الميلاد وحتى عمر سنتين.",
+        },
+      ];
+
+      const sectionsOrder = [
+        {
+          id: "general",
+          title: "قسم المعلومات العامة",
+          data: allGeneralQuestions,
+        },
+        {
+          id: "computer",
+          title: "قسم الحاسب الآلي",
+          data: allComputerQuestions,
+        },
+        { id: "arabic", title: "قسم اللغة العربية", data: allArabicQuestions },
+        { id: "pedagogy", title: "قسم التربوي", data: allPedagogyQuestions },
+      ];
+
+      // قائمة موسعة من الرسائل التحفيزية والطريفة بدون تكرار في نفس الجلسة
+      const originalMotivationQuotes = [
+        "💡 عايزة أقولك على حاجة: لازم تنجحي وتتفوقي عشان يكون معاكي قرشك في إيدك واستقلاليتك لوحدك! 💰",
+        "🚀 افتكري دايماً.. التعب والسهر بتوع النهاردة هما الرفاهية وراحة البال بتوع بكرة! 🌟",
+        "✨ مفيش حلم بيجيل لوحده، كل سؤال بتفكر فيه وتحليه بيقربك خطوة للوظيفة اللي تستاهليها! 💼",
+        "💪 خليكي شجاعة وناشفة كده وكملي للآخر، النجاح ده متفصل ليكي إنتي وبس! ❤️",
+        "🎯 مستقبلك واستقلالك بيتبنوا هنا ودلوقتي، ركزي في القسم اللي جاي وهتكسري الدنيا! 🔥",
+        "🔥 شدي حيلك.. الوظيفة الحكومية استقرار وراحة بال ليكي ولازم تحاربي عشانها! 🎖️",
+        "🧠 دماغك ده ألماظة، كل ما تشغليها أكتر في الأسئلة كل ما تلمع أكتر وأكتر! 💎",
+        "👑 عاوزه تبقي ملكة نفسك؟ يبقى لازم تفرضي كلمتك بنجاحك ومجموعك العالي! 🏆",
+        "☕ خدي نفس عميق، اشربي بوق مياه أو شاي، وادخلي على القسم اللي بعده بكل وحشية! 💪",
+        "🌟 ولا يهمك من أي سؤال صعب، إنتي أدها وقدود وهي ليلة وهتعدي بتفوق! 🌠",
+        "🎯 الإصرار هو سر النجاح، كملي طريقك للآخر وماتخليش حاجة توقفك أبداً! 🚀",
+        "💡 كل خطوة بتخطيها هنا بتقربك أكتر لخط النهاية.. يلا بينا للقسم اللي عليه الدور! 🏃‍♀️",
+      ];
+
+      let availableQuotes = [];
+
+      const QUESTIONS_PER_SECTION = 5;
+      let currentSectionIndex = 0;
+      let currentQuestionsList = [];
+      let currentQuestionIndex = 0;
+
+      let sectionScores = { general: 0, computer: 0, arabic: 0, pedagogy: 0 };
+      let userAnswers = { general: [], computer: [], arabic: [], pedagogy: [] };
+      let selectedQuestions = {};
+
+      let timer;
+      let timeLeft;
+      let sectionDurationMinutes = 5;
+
+      function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
         }
       }
-    }, 1000);
-  }
 
-  function getRating(percent) {
-    if (percent > 90) {
-      return `<span class="status-text" style="color: green;">عاش 🔥</span>`;
-    } else if (percent >= 50) {
-      return `<span class="status-text" style="color: #d97706;">فيه أحسن 👍</span>`;
-    } else {
-      return `<span class="status-text" style="color: red;">فاشل ❌</span>`;
-    }
-  }
+      function getRandomQuestions(sourceArray, count) {
+        let arrayCopy = JSON.parse(JSON.stringify(sourceArray));
+        shuffle(arrayCopy);
+        let selected = arrayCopy.slice(0, count);
+        selected.forEach((q) => shuffle(q.options));
+        return selected;
+      }
 
-  function showFinalResults(timeUp = false) {
-    document.getElementById("quiz").classList.add("hidden");
-    const resultDiv = document.getElementById("result");
-    resultDiv.classList.remove("hidden");
+      function checkPassword() {
+        const passwordInput = document.getElementById("password").value;
+        sectionDurationMinutes =
+          parseInt(document.getElementById("duration").value) || 5;
 
-    let totalQuestions = 0;
-    let totalScore = 0;
-    let resultsHTML = "";
-    let reviewHTML = "<h3>تفاصيل الإجابات:</h3>";
+        if (passwordInput === "20172017") {
+          document.getElementById("login-container").classList.add("hidden");
 
-    sectionsOrder.forEach(sec => {
-      const qList = selectedQuestions[sec.id];
-      const score = sectionScores[sec.id];
-      const count = qList.length;
-      const percent = parseFloat(((score / count) * 100).toFixed(1));
-      
-      totalQuestions += count;
-      totalScore += score;
+          // إعادة تعبئة وتخليط قائمة الرسائل عند بداية كل اختبار جديد لمنع التكرار
+          availableQuotes = [...originalMotivationQuotes];
+          shuffle(availableQuotes);
 
-      resultsHTML += `
-        <div class="result-box">
-          <h3>📌 ${sec.title}</h3>
-          <p>الدرجة: <strong>${score} من ${count}</strong> (${percent}%)</p>
-          <p>التقييم: ${getRating(percent)}</p>
-        </div>
-      `;
+          sectionsOrder.forEach((sec) => {
+            selectedQuestions[sec.id] = getRandomQuestions(
+              sec.data,
+              QUESTIONS_PER_SECTION,
+            );
+          });
 
-      reviewHTML += `<h4>📌 ${sec.title}:</h4><ul>`;
-      qList.forEach((q, i) => {
-        const ua = userAnswers[sec.id][i] || "لم يُجب";
-        const isCorrect = ua === q.answer;
-        reviewHTML += `
-          <li>
-            <strong>السؤال ${i + 1}:</strong> ${q.question}<br>
-            إجابتك: <span class="${isCorrect ? 'correct-answer' : 'wrong-answer'}">${ua}</span> | 
-            الصحيحة: <span class="correct-answer">${q.answer}</span>
-            ${q.explanation ? `<br><small>💡 ${q.explanation}</small>` : ""}
-          </li>`;
+          currentSectionIndex = 0;
+          startSection(currentSectionIndex);
+        } else {
+          alert("🚫 المحاولة غير صحيحة! تأكد من كتابة كلمة السر بشكل دقيق.");
+        }
+      }
+
+      function startSection(index) {
+        const sec = sectionsOrder[index];
+        currentQuestionsList = selectedQuestions[sec.id];
+
+        currentQuestionIndex = 0;
+        sectionScores[sec.id] = 0;
+        userAnswers[sec.id] = [];
+
+        document.getElementById("section-title").textContent = sec.title;
+        document.getElementById("quiz").classList.remove("hidden");
+
+        loadQuestion();
+        startTimer();
+      }
+
+      function showTransition() {
+        clearInterval(timer);
+        document.getElementById("quiz").classList.add("hidden");
+
+        // سحب جملة بدون تكرار حتى تنفد الجمل
+        if (availableQuotes.length === 0) {
+          availableQuotes = [...originalMotivationQuotes];
+          shuffle(availableQuotes);
+        }
+        const currentQuote = availableQuotes.pop();
+        document.getElementById("motivation-text").innerHTML = currentQuote;
+
+        document
+          .getElementById("transition-container")
+          .classList.remove("hidden");
+      }
+
+      function startNextSection() {
+        document.getElementById("transition-container").classList.add("hidden");
+        currentSectionIndex++;
+        startSection(currentSectionIndex);
+      }
+
+      function loadQuestion() {
+        const q = currentQuestionsList[currentQuestionIndex];
+        const questionContainer = document.getElementById("question-container");
+
+        questionContainer.innerHTML = `
+          <h3 style="text-align: right; color: #1e293b; margin-bottom: 15px;">${q.question}</h3>
+          ${q.options
+            .map(
+              (option) => `
+            <label class="option-label">
+              <input type="radio" name="option" value="${option}" />
+              <span>${option}</span>
+            </label>
+          `,
+            )
+            .join("")}
+        `;
+
+        document.getElementById("question-info").textContent =
+          `السؤال ${currentQuestionIndex + 1} من ${currentQuestionsList.length}`;
+      }
+
+      function nextQuestion(event) {
+        if (event) event.preventDefault();
+
+        const selected = document.querySelector('input[name="option"]:checked');
+        if (!selected)
+          return alert("رايحة على فين يا حجة؟ طب اختاري إجابة الأول! 🤭");
+
+        const secId = sectionsOrder[currentSectionIndex].id;
+        const answerValue = selected.value;
+        const isCorrect =
+          answerValue === currentQuestionsList[currentQuestionIndex].answer;
+
+        userAnswers[secId][currentQuestionIndex] = answerValue;
+        if (isCorrect) sectionScores[secId]++;
+
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < currentQuestionsList.length) {
+          loadQuestion();
+        } else {
+          if (currentSectionIndex < sectionsOrder.length - 1) {
+            showTransition();
+          } else {
+            clearInterval(timer);
+            showFinalResults();
+          }
+        }
+      }
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          const quizDiv = document.getElementById("quiz");
+          if (quizDiv && !quizDiv.classList.contains("hidden")) {
+            const nextBtn = document.getElementById("next-button");
+            if (nextBtn) {
+              nextBtn.click();
+            }
+          }
+        }
       });
-      reviewHTML += "</ul>";
-    });
 
-    const totalPercent = parseFloat(((totalScore / totalQuestions) * 100).toFixed(1));
-    const totalRating = getRating(totalPercent);
-    let warningMsg = timeUp ? `<p style="color: red;">⏰ انتهى الوقت أثناء الحل.</p>` : "";
+      function startTimer() {
+        clearInterval(timer);
+        timeLeft = sectionDurationMinutes * 60;
 
-    resultDiv.innerHTML = `
-      ${warningMsg}
-      <h2>📊 النتيجة النهائية للاختبار</h2>
-      
-      ${resultsHTML}
+        timer = setInterval(() => {
+          timeLeft--;
+          const minutes = Math.floor(timeLeft / 60);
+          const seconds = timeLeft % 60;
+          document.getElementById("timer").textContent =
+            `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 
-      <div class="result-box" style="background-color: #d4edda; border: 1px solid #c3e6cb;">
-        <h3 style="color: #155724;">🏆 المجموع الكلي</h3>
-        <p style="color: #155724; font-size: 20px;"><strong>${totalScore} من ${totalQuestions}</strong> (${totalPercent}%)</p>
-        <p>النتيجة العامة: ${totalRating}</p>
-      </div>
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            alert("⏰ انتهى الوقت المحدد لهذا القسم!");
 
-      ${reviewHTML}
-      
-      <button class="btn" onclick="location.reload()">🔄 إعادة الاختبار (أسئلة جديدة)</button>
-      <a href="https://www.facebook.com/questions7000" target="_blank" class="btn btn-study">📚 عايزذاكر الأول</a>
-    `;
-  }
+            if (currentSectionIndex < sectionsOrder.length - 1) {
+              showTransition();
+            } else {
+              showFinalResults(true);
+            }
+          }
+        }, 1000);
+      }
 
-  document.getElementById("quizForm").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      nextQuestion(event);
-    }
-  });
-</script>
+      function getRating(percent) {
+        const highRatings = [
+          `<span class="status-text" style="color: green;">يا سلالالام عالبطولة والجمال! 👑 إنتي كدة جاهزة تكتسحي الامتحان الأساسي، استمري على الحلاوة دي! ✨</span>`,
+          `<span class="status-text" style="color: green;">ما شاء الله عليكي يا ست الكل! وحشة جيلك وبطلة، كملي بنفس الكفاءة دي وهتاكلي الامتحان لوحدك! 🚀</span>`,
+          `<span class="status-text" style="color: green;">الله أكبر عليكِ! دماغ الماس وتركيز عالي، حافظة الدرس تمام وصاحبة قرار! 🎯</span>`,
+        ];
 
-</body>
+        const mediumRatings = [
+          `<span class="status-text" style="color: #d97706;">إيه يا ستي الأداء الماشي حاله ده؟ 😅 شغال كويس بس تقدري تجيبي أحسن بكتير لو ركزتي شوية كمان! 👍</span>`,
+          `<span class="status-text" style="color: #d97706;">مشي حالك ماشي، بس إنتي لسه فيكي حيل تدي أكتر من كده بكتير يا بطلة! شدّي حيلك شوية! 📈</span>`,
+          `<span class="status-text" style="color: #d97706;">يعتبر نجاح بتقدير "يا حلاوة"، بس إحنا طماعين وعايزين الفول ماركة المرة الجاية! 😉💪</span>`,
+        ];
+
+        const lowRatings = [
+          `<span class="status-text" style="color: red;">يا موكوسة ليلتك طين! 🤭 لما بتجيبي الدرجة دي دلوقتي أومال في الامتحان الحقيقي هتعملي إيه؟ قومي اغسلي وشك واشربي شاي وشدي حيلك كده وذاكري كويس! ☕😂</span>`,
+          `<span class="status-text" style="color: red;">ده إحنا ليلتنا مفيهاش نور خالص! 🤦‍♀️ تعالي هنا رايحة فين، اقعدي راجعي من الأول وجيبي كشكولك عشان نهكر المنهج ده مع بعض! 📚🔥</span>`,
+          `<span class="status-text" style="color: red;">يا ستي اهدي كده وقولي يا مسهل.. النتيجة دي فضيحة كروية! 😅 قومي فكري وفوقي وتعالي نعيد من جديد! ⚡</span>`,
+        ];
+
+        let selectedList;
+        if (percent >= 85) {
+          selectedList = highRatings;
+        } else if (percent >= 50) {
+          selectedList = mediumRatings;
+        } else {
+          selectedList = lowRatings;
+        }
+
+        const randomIndex = Math.floor(Math.random() * selectedList.length);
+        return selectedList[randomIndex];
+      }
+
+      function showFinalResults(timeUp = false) {
+        document.getElementById("quiz").classList.add("hidden");
+        const resultDiv = document.getElementById("result");
+        resultDiv.classList.remove("hidden");
+
+        let totalQuestions = 0;
+        let totalScore = 0;
+        let resultsHTML = "";
+        let reviewHTML = "<h3 style='text-align: right;'>تفاصيل الإجابات:</h3>";
+
+        sectionsOrder.forEach((sec) => {
+          const qList = selectedQuestions[sec.id];
+          const score = sectionScores[sec.id];
+          const count = qList.length;
+          const percent = parseFloat(((score / count) * 100).toFixed(1));
+
+          totalQuestions += count;
+          totalScore += score;
+
+          resultsHTML += `
+            <div class="result-box">
+              <h3>📌 ${sec.title}</h3>
+              <p>الدرجة: <strong>${score} من ${count}</strong> (${percent}%)</p>
+              <p>التقييم: ${getRating(percent)}</p>
+            </div>
+          `;
+
+          reviewHTML += `<h4 style="text-align: right; font-size:15px;">📌 ${sec.title}:</h4><ul>`;
+          qList.forEach((q, i) => {
+            const ua = userAnswers[sec.id][i] || "لم يُجب";
+            const isCorrect = ua === q.answer;
+            reviewHTML += `
+              <li>
+                <strong>السؤال ${i + 1}:</strong> ${q.question}<br>
+                إجابتك: <span class="${isCorrect ? "correct-answer" : "wrong-answer"}">${ua}</span> |
+                الصحيحة: <span class="correct-answer">${q.answer}</span>
+                ${q.explanation ? `<br><small style="color: #555;">💡 ${q.explanation}</small>` : ""}
+              </li>`;
+          });
+          reviewHTML += "</ul>";
+        });
+
+        const totalPercent = parseFloat(
+          ((totalScore / totalQuestions) * 100).toFixed(1),
+        );
+        const totalRating = getRating(totalPercent);
+        let warningMsg = timeUp
+          ? `<p style="color: red;">⏰ انتهى الوقت أثناء الحل.</p>`
+          : "";
+
+        resultDiv.innerHTML = `
+          ${warningMsg}
+          <h2>📊 النتيجة النهائية للاختبار</h2>
+          ${resultsHTML}
+          <div class="result-box" style="background-color: #d4edda; border: 1.5px solid #c3e6cb;">
+            <h3 style="color: #155724;">🏆 المجموع الكلي</h3>
+            <p style="color: #155724; font-size: 19px;"><strong>${totalScore} من ${totalQuestions}</strong> (${totalPercent}%)</p>
+            <p>النتيجة العامة: ${totalRating}</p>
+          </div>
+          ${reviewHTML}
+          <button class="btn" onclick="location.reload()">🔄 إعادة الاختبار (أسئلة جديدة)</button>
+          <a href="https://www.facebook.com/questions7000" target="_blank" class="btn btn-study">📚 عايز اذاكر الأول  </a>
+        `;
+      }
+    </script>
+  </body>
 </html>
