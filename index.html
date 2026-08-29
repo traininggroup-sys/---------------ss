@@ -56,7 +56,8 @@
       }
 
       input[type="password"],
-      input[type="number"] {
+      input[type="number"],
+      select {
         width: 100%;
         padding: 12px;
         margin-bottom: 15px;
@@ -66,10 +67,14 @@
         outline: none;
         transition: border-color 0.3s;
         -webkit-appearance: none;
+        background-color: #fff;
+        font-family: "Cairo", Arial, sans-serif;
+        font-weight: 700;
       }
 
       input[type="password"]:focus,
-      input[type="number"]:focus {
+      input[type="number"]:focus,
+      select:focus {
         border-color: #007bff;
       }
 
@@ -271,8 +276,21 @@
       <h2>أسئلة الجهاز المركزي</h2>
     </div>
 
-    <!-- شاشة التسجيل -->
-    <div id="login-container" class="card">
+    <!-- شاشة اختيار المسابقة أولاً -->
+    <div id="selection-container" class="card">
+      <label for="competition-select">🎯 اختر المسابقة التابع لها:</label>
+      <select id="competition-select">
+        <option value="imam">مسابقة إمام وخطيب</option>
+        <option value="experts">مصلحة الخبراء</option>
+        <option value="teachers">مسابقة الحصة / عربي</option>
+        <option value="azhar_arabic">مسابقة الأزهر عربي</option>
+        <option value="azhar_quran">مسابقة الأزهر قرآن</option>
+      </select>
+      <button class="btn" onclick="goToLogin()">التالي ➔</button>
+    </div>
+
+    <!-- شاشة التسجيل (كلمة المرور) -->
+    <div id="login-container" class="card hidden">
       <label for="password">🔒 أدخل كلمة المرور:</label>
       <input id="password" type="password" placeholder="أدخل كلمة السر" />
       <label for="duration">⏳ مدة كل قسم (بالدقائق):</label>
@@ -421,6 +439,43 @@
         },
       ];
 
+      const allEnglishQuestions = [
+        {
+          question: "Choose the correct verb: She _____ to school every day.",
+          options: ["go", "goes", "going", "gone"],
+          answer: "goes",
+          explanation:
+            "مع الضمير المفرد الغائب (She) في المضارع البسيط نضيف (es/s) للفعل.",
+        },
+        {
+          question: "What is the past tense of 'eat'?",
+          options: ["eated", "ate", "aten", "eating"],
+          answer: "ate",
+          explanation: "الفعل 'eat' شاذ وماضيه هو 'ate'.",
+        },
+        {
+          question:
+            "Choose the correct article: I saw _____ elephant in the zoo.",
+          options: ["a", "an", "the", "no article"],
+          answer: "an",
+          explanation:
+            "نستخدم 'an' قبل الكلمات التي تبدأ بحرف متحرك مثل (elephant).",
+        },
+        {
+          question: "The opposite of the word 'Hot' is:",
+          options: ["Cold", "Warm", "Cool", "Dry"],
+          answer: "Cold",
+          explanation: "عكس كلمة حار (Hot) هو بارد (Cold).",
+        },
+        {
+          question: "They _____ playing football now.",
+          options: ["is", "am", "are", "be"],
+          answer: "are",
+          explanation:
+            "الضمير 'They' يأخذ الفعل المساعد 'are' في المضارع المستمر.",
+        },
+      ];
+
       const allPedagogyQuestions = [
         {
           question: "من مراعاة الفروق الفردية تنويع طرق التدريس؟",
@@ -462,7 +517,8 @@
         },
       ];
 
-      const sectionsOrder = [
+      // ترتيب الأقسام: وضع قسم الإنجليزي مباشرة بعد قسم اللغة العربية
+      const allMasterSections = [
         {
           id: "general",
           title: "قسم المعلومات العامة",
@@ -474,10 +530,17 @@
           data: allComputerQuestions,
         },
         { id: "arabic", title: "قسم اللغة العربية", data: allArabicQuestions },
+        {
+          id: "english",
+          title: "قسم اللغة الإنجليزية",
+          data: allEnglishQuestions,
+        },
         { id: "pedagogy", title: "قسم التربوي", data: allPedagogyQuestions },
       ];
 
-      // قائمة موسعة من الرسائل التحفيزية والطريفة بدون تكرار في نفس الجلسة
+      let sectionsOrder = [];
+      let selectedCompetition = "";
+
       const originalMotivationQuotes = [
         "💡 عايزة أقولك على حاجة: لازم تنجحي وتتفوقي عشان يكون معاكي قرشك في إيدك واستقلاليتك لوحدك! 💰",
         "🚀 افتكري دايماً.. التعب والسهر بتوع النهاردة هما الرفاهية وراحة البال بتوع بكرة! 🌟",
@@ -494,14 +557,13 @@
       ];
 
       let availableQuotes = [];
-
       const QUESTIONS_PER_SECTION = 5;
       let currentSectionIndex = 0;
       let currentQuestionsList = [];
       let currentQuestionIndex = 0;
 
-      let sectionScores = { general: 0, computer: 0, arabic: 0, pedagogy: 0 };
-      let userAnswers = { general: [], computer: [], arabic: [], pedagogy: [] };
+      let sectionScores = {};
+      let userAnswers = {};
       let selectedQuestions = {};
 
       let timer;
@@ -523,6 +585,13 @@
         return selected;
       }
 
+      function goToLogin() {
+        selectedCompetition =
+          document.getElementById("competition-select").value;
+        document.getElementById("selection-container").classList.add("hidden");
+        document.getElementById("login-container").classList.remove("hidden");
+      }
+
       function checkPassword() {
         const passwordInput = document.getElementById("password").value;
         sectionDurationMinutes =
@@ -531,7 +600,22 @@
         if (passwordInput === "20172017") {
           document.getElementById("login-container").classList.add("hidden");
 
-          // إعادة تعبئة وتخليط قائمة الرسائل عند بداية كل اختبار جديد لمنع التكرار
+          // تصفية الأقسام بناءً على المسابقة المختارة
+          if (selectedCompetition === "teachers") {
+            sectionsOrder = allMasterSections.filter(
+              (sec) => sec.id !== "english",
+            );
+          } else {
+            sectionsOrder = [...allMasterSections];
+          }
+
+          sectionScores = {};
+          userAnswers = {};
+          sectionsOrder.forEach((sec) => {
+            sectionScores[sec.id] = 0;
+            userAnswers[sec.id] = [];
+          });
+
           availableQuotes = [...originalMotivationQuotes];
           shuffle(availableQuotes);
 
@@ -568,7 +652,6 @@
         clearInterval(timer);
         document.getElementById("quiz").classList.add("hidden");
 
-        // سحب جملة بدون تكرار حتى تنفد الجمل
         if (availableQuotes.length === 0) {
           availableQuotes = [...originalMotivationQuotes];
           shuffle(availableQuotes);
