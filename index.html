@@ -283,7 +283,7 @@
         </option>
         <option value="imam">مسابقة إمام وخطيب</option>
         <option value="experts">مصلحة الخبراء</option>
-        <option value="teachers">مسابقة الحصة / معلمون</option>
+        <option value="teachers">مسابقة الحصة / عربي</option>
         <option value="azhar_arabic">مسابقة الأزهر عربي</option>
         <option value="azhar_quran">مسابقة الأزهر قرآن</option>
       </select>
@@ -596,6 +596,13 @@
           sectionsOrder = allMasterSections.filter(
             (sec) => sec.id !== "english",
           );
+        } else if (
+          selectedCompetition === "imam" ||
+          selectedCompetition === "experts"
+        ) {
+          sectionsOrder = allMasterSections.filter(
+            (sec) => sec.id !== "pedagogy",
+          );
         } else {
           sectionsOrder = [...allMasterSections];
         }
@@ -755,7 +762,7 @@
         const mediumRatings = [
           `<span class="status-text" style="color: #d97706;">إيه يا ستي الأداء الماشي حاله ده؟ 😅 شغال كويس بس تقدري تجيبي أحسن بكتير لو ركزتي شوية كمان! 👍</span>`,
           `<span class="status-text" style="color: #d97706;">مشي حالك ماشي، بس إنتي لسه فيكي حيل تدي أكتر من كده بكتير يا بطلة! شدّي حيلك شوية! 📈</span>`,
-          `<span class="status-text" style="color: #d97706;">يعتبر نجاح بتقدير "يا حلاوة"، بس إحنا طماعين وعايزين الفول ماركة المرة الجاية! 😉💪</span>`,
+          `<span class="status-text" style="color: #d97706;">يعتبر نجاح بتقدير "يا حلاوة", بس إحنا طماعين وعايزين الفول ماركة المرة الجاية! 😉💪</span>`,
         ];
 
         const lowRatings = [
