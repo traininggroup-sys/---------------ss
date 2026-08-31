@@ -8133,22 +8133,11 @@
                             </div>
                             ${reviewHTML}
                             <button class="btn" onclick="location.reload()">🔄 إعادة الاختبار (أسئلة جديدة)</button>
-                       <a href="#" id="telegram-study-btn" class="btn btn-study">📚 عايز اذاكر الأول</a>
+                       <a href=" http://t.me/NaglaFG" id="telegram-study-btn" class="btn btn-study">📚 عايز اذاكر الأول</a>
                         
                         
                         `;
       }
-
-      document
-        .getElementById("telegram-study-btn")
-        .addEventListener("click", function (e) {
-          e.preventDefault();
-          const message =
-            "السلام عليكم، عايزة استفسر عن تفاصيل الجروب الخاص والمذاكرة";
-          const encodedMessage = encodeURIComponent(message);
-          const telegramUrl = `https://t.me/NaglaFG?text=${encodedMessage}`;
-          window.open(telegramUrl, "_blank");
-        });
     </script>
   </body>
 </html>
