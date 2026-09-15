@@ -286,7 +286,6 @@
           -- اختر المسابقة من هنا --
         </option>
         <option value="imam">مسابقة إمام وخطيب</option>
-        <option value="experts">مصلحة الخبراء</option>
         <option value="teachers">مسابقة الحصة / عربي</option>
         <option value="azhar_arabic">مسابقة الأزهر عربي</option>
         <option value="azhar_quran">مسابقة الأزهر قرآن</option>
@@ -8042,21 +8041,64 @@
 
       function getRating(percent) {
         const highRatings = [
-          `<span class="status-text" style="color: green;">يا سلالالام عالبطولة والجمال! 👑 إنتي كدة جاهزة تكتسحي الامتحان الأساسي، استمري على الحلاوة دي! ✨</span>`,
-          `<span class="status-text" style="color: green;">ما شاء الله عليكي يا ست الكل! وحشة جيلك وبطلة، كملي بنفس الكفاءة دي وهتاكلي الامتحان لوحدك! 🚀</span>`,
-          `<span class="status-text" style="color: green;">الله أكبر عليكِ! دماغ الماس وتركيز عالي، حافظة الدرس تمام وصاحبة قرار! 🎯</span>`,
+          `<span class="status-text" style="color: green;">كمّلي كده، الجاي أحلى إن شاء الله 🌸</span>`,
+          `<span class="status-text" style="color: green;">ملفيش احلي من البنت الشاطرة اللي ملامحها حلوة🌺</span>`,
+          `<span class="status-text" style="color: green;">طول عمري اعرف البنت الشاطرة بتكون وحشه اول مرة اشوف بنت شاطرة وحلوه زيك</span>`,
+          `<span class="status-text" style="color: green;">درجة حلوة وملامح حلوة… سيبي حاجة للباقيين بقى 😂❤️</span>`,
+          `<span class="status-text" style="color: green;">ما شاء الله، شاطرة وحلوة… يابخته 😂🌺</span>`,
+          `<span class="status-text" style="color: green;">شفتي لما ذاكرتي بقيتي شاطرة إزاي؟ 😂 كمّلي بقى على المستوى ده.</span>`,
+          `<span class="status-text" style="color: green;">أهو المذاكرة طلعت بتجيب نتيجة… كمّلي كده يا شاطرة 😂👏</span>`,
+          `<span class="status-text" style="color: green;">شفتي بقى؟ لما ذاكرتي الدنيا ظبطت معاكي 😂 كمّلي.</span>`,
+          `<span class="status-text" style="color: green;">اهو الشطارة بدأت تظهر أهو 😂 خليكي على المستوى ده.</span>`,
+          `<span class="status-text" style="color: green;">كده بدأتِ تدخلي في سكة الشاطرين بجد 😂 كمّلي يا بطلة.</span>`,
+          `<span class="status-text" style="color: green;">شفتي الفرق لما الواحد يذاكر؟ 😂 أهو بقى كمّلي وماترجعيش.</span>`,
+          `<span class="status-text" style="color: green;">الدرجة دي تقول إن المذاكرة لايقة عليكي جدًا 😂❤️</span>`,
+          `<span class="status-text" style="color: green;">بما إنك بدأتي كده، ممنوع ترجعي للمستوى القديم بقى 😂🌺</span>`,
+          `<span class="status-text" style="color: green;">قالوا دماغها طحينة، طلعنا إحنا اللي مش فاهمينك 😂🌺</span>`,
+          `<span class="status-text" style="color: green;">شاطرة وملامحك حلوة تتجوزيني؟ ولو متجوزة، احجزيلي واحدة من الولدة من دلوقتي 😂</span>`,
         ];
 
         const mediumRatings = [
-          `<span class="status-text" style="color: #d97706;">إيه يا ستي الأداء الماشي حاله ده؟ 😅 شغال كويس بس تقدري تجيبي أحسن بكتير لو ركزتي شوية كمان! 👍</span>`,
-          `<span class="status-text" style="color: #d97706;">مشي حالك ماشي، بس إنتي لسه فيكي حيل تدي أكتر من كده بكتير يا بطلة! شدّي حيلك شوية! 📈</span>`,
-          `<span class="status-text" style="color: #d97706;">يعتبر نجاح بتقدير "يا حلاوة", بس إحنا طماعين وعايزين الفول ماركة المرة الجاية! 😉💪</span>`,
+          `<span class="status-text" style="color: #d97706;">إنتِ واقفة في النص ليه؟ يا فوق مع الشاطرين يا بلاش 😂 يلا ذاكري</span>`,
+          `<span class="status-text" style="color: #d97706;">الشاطرة بتذاكر وتكسر الدنيا، وإنتِ لسه بتسخني بس 😂🔥 يلا نكسر ولا اي</span>`,
+          `<span class="status-text" style="color: #d97706;">بصراحة الدرجة دي أقل من مستوى البنت اللي أنا شايفها قدامي 😂❤️</span>`,
+          `<span class="status-text" style="color: #d97706;">الشاطرين سبقوكي شوية… يلا الحقيهم 😂🔥 ذاكري اكتر</span>`,
+          `<span class="status-text" style="color: #d97706;">إنتِ كده بتلعبي في النص، وإحنا عايزينك في القمة 😂❤️</span>`,
+          `<span class="status-text" style="color: #d97706;">يا بنتي التعيين مستني الشاطرين، والفلوس مستنياكي… اتحركي بقى 😂</span>`,
+          `<span class="status-text" style="color: #d97706;">ذاكري دلوقتي، عشان بعد التعيين مش هتحتاجي حد يجيبلك اللي نفسك فيه 😂</span>`,
+          `<span class="status-text" style="color: #d97706;">عايزة تشتري كل اللي نفسك فيه؟ يبقى نذاكر اكتر ونشد حلنا</span>`,
+          `<span class="status-text" style="color: #d97706;">عايزة الفلوس؟ ذاكري. عايزة التعيين؟ ذاكري أكتر. عايزة الاتنين؟ متناميش 😂😂</span>`,
+          `<span class="status-text" style="color: #d97706;">نذاكر اكتر علشان يبقى معانا فلوس ونشتري الشنطة الجلد الجديدة</span>`,
+          `<span class="status-text" style="color: #d97706;">فاكرة الحاجات اللي أجلتيها عشان الفلوس؟ شدّي حيلك عشان نعوضها كلها 😂</span>`,
+          `<span class="status-text" style="color: #d97706;">تخيلي نفسك قبضتي أول مرتب وبتشتري اللي نفسك فيه… كمّلي مذاكرة بقى 😂</span>`,
+          `<span class="status-text" style="color: #d97706;">أول مرتب مش حلم بعيد، بس محتاج شوية مذاكرة وشوية شد حيل 😂</span>`,
+          `<span class="status-text" style="color: #d97706;">شدّي حيلك دلوقتي، عشان بعد الشغل مفيش حاجة تقولي عليها غالية 😂</span>`,
+          `<span class="status-text" style="color: #d97706;">كل ما tكسلي افتكري أول مرتب والحاجات اللي نفسك تشتريها 😂</span>`,
+          `<span class="status-text" style="color: #d97706;">يلا نرفع الدرجات عشان نشتغل 😂❤️</span>`,
+          `<span class="status-text" style="color: #d97706;">المذاكرة النهارده، والمرتب الحلو بكرة… اتفقنا؟ 😂</span>`,
+          `<span class="status-text" style="color: #d97706;">سمعتي كام مرة مش معايا فلوس يلا نذاكر بقى ونشتغل</span>`,
+          `<span class="status-text" style="color: #d97706;">تخيلي كده الشنطة جلد طبيعي وفيها فلوس كتير</span>`,
+          `<span class="status-text" style="color: #d97706;">تخيلي كده أول مرتب متحطوط في شنطة شيك… يستاهل المذاكرة 😂❤️</span>`,
+          `<span class="status-text" style="color: #d97706;">يلا نذاكر علشان نغيظ الصفرة بالتعيين</span>`,
+          `<span class="status-text" style="color: #d97706;">خليكي شاطرة، أصل في ناس نجاحك بيعملها ضغط نفسي 😂</span>`,
+          `<span class="status-text" style="color: #d97706;">لازم نذاكر وننجح، عشان فيه ناس لازم نفرحها وناس تانية نوجع بطنها 😂</span>`,
+          `<span class="status-text" style="color: #d97706;">كل درجة زيادة هتفرّح حد وتحرق دم حد تاني 😂❤️</span>`,
         ];
 
         const lowRatings = [
-          `<span class="status-text" style="color: red;">يا موكوسة ليلتك طين! 🤭 لما بتجيبي الدرجة دي دلوقتي أومال في الامتحان الحقيقي هتعملي إيه؟ قومي اغسلي وشك واشربي شاي وشدي حيلك كده وذاكري كويس! ☕😂</span>`,
-          `<span class="status-text" style="color: red;">ده إحنا ليلتنا مفيهاش نور خالص! 🤦‍♀️ تعالي هنا رايحة فين، اقعدي راجعي من الأول وجيبي كشكولك عشان نهكر المنهج ده مع بعض! 📚🔥</span>`,
-          `<span class="status-text" style="color: red;">يا ستي اهدي كده وقولي يا مسهل.. النتيجة دي فضيحة كروية! 😅 قومي فكري وفوقي وتعالي نعيد من جديد! ⚡</span>`,
+          `<span class="status-text" style="color: red;">الدرجة دي اكيد تجربة ولا هنثبت عليها؟ 😂 روح ذاكر الاول وبعدين تعالى قفل الامتحان</span>`,
+          `<span class="status-text" style="color: red;">المهم إن الامتحان تجريبي، عشان النتيجة دي مينفعش تتكرر 😂 تك ضربة روجي ذاكري</span>`,
+          `<span class="status-text" style="color: red;">دي درجة تضحك 😂 روحي ذاكري وحلي كويس تك حل وسطك</span>`,
+          `<span class="status-text" style="color: red;">😂😂😂 انتي كده دخلتي تعملي إيه بالظبط؟</span>`,
+          `<span class="status-text" style="color: red;">معلش المهم إننا عرفنا الغلط فين… في كل حتة تقريبًا 😂 تك صروح فودانك روحي ذاكري</span>`,
+          `<span class="status-text" style="color: red;">واضح إنك كنتي بتجاوبي حسب الإحساس 😂 روحي لمّي نفسك وذاكري</span>`,
+          `<span class="status-text" style="color: red;">هو إنتي دخلتي الامتحان على الله ولا إيه 😂 روحي ذاكري وبلاش فضايح</span>`,
+          `<span class="status-text" style="color: red;">ده مش هينكتبلك عفوا في النتيجة، دول هيقولولك كحك أورس أورس كحك 😂</span>`,
+          `<span class="status-text" style="color: red;">اي النتيجة دي ياشماتت سلفتك فيكي روحي ذكري علشان تغيظي سلفتك بالتعيين😂</span>`,
+          `<span class="status-text" style="color: red;">ليه حق حوزك يدغدغ عضمك يام دماغ طخينة روحي ذاكري يا عسل😂</span>`,
+          `<span class="status-text" style="color: red;">أهو الدليل وصل، يلا روحي اعملي لقمة كده عشان الغدا 😂</span>`,
+          `<span class="status-text" style="color: red;">يا ستي مذاكرة إيه ووجع دماغ إيه 😂 روحي اغسلي طبقين الست مالهاش غير بيت جوزها</span>`,
+          `<span class="status-text" style="color: red;">بالنتيجة دي مش هتبقي إندِبِندِنت وومان … هتبقي وومان ترويق مسح كنس 😂 روحي ذاكري علشان يكون معاكي فلوس وتجيبي شغالة</span>`,
         ];
 
         let selectedList;
