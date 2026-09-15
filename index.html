@@ -7814,7 +7814,6 @@
         },
         { id: "pedagogy", title: "قسم التربوي", data: allPedagogyQuestions },
       ];
-
       let sectionsOrder = [];
       let selectedCompetition = "";
 
@@ -7953,7 +7952,6 @@
         const q = currentQuestionsList[currentQuestionIndex];
         const questionContainer = document.getElementById("question-container");
 
-        // فحص إذا كان السؤال إنجليزي أو يبدأ بحرف لاتيني
         const isEnglish = /^[A-Za-z]/.test(q.question);
 
         questionContainer.innerHTML = `
@@ -8134,11 +8132,11 @@
           totalScore += score;
 
           resultsHTML += `
-                              <div class="result-box">
+                            <div class="result-box">
                                 <h3>📌 ${sec.title}</h3>
                                 <p>الدرجة: <strong>${score} من ${count}</strong> (${percent}%)</p>
                                 <p>بقولك: ${getRating(percent)}</p>
-                              </div>
+                            </div>
                             `;
 
           reviewHTML += `<h4 style="text-align: right; font-size:15px;">📌 ${sec.title}:</h4><ul>`;
@@ -8173,12 +8171,17 @@
                               <p style="color: #155724; font-size: 19px;"><strong>${totalScore} من ${totalQuestions}</strong> (${totalPercent}%)</p>
                               <p>النتيجة العامة: ${totalRating}</p>
                             </div>
-                            ${reviewHTML}
+
+                            <!-- الأزرار فوق تفاصيل الإجابات مباشرة -->
+                            <a href="http://t.me/NaglaFG" id="telegram-study-btn-top" class="btn btn-study">📚 عايز اذاكر الاول</a>
                             <button class="btn" onclick="location.reload()">🔄 إعادة الاختبار (أسئلة جديدة)</button>
-                       <a href=" http://t.me/NaglaFG" id="telegram-study-btn" class="btn btn-study">📚 عايز اذاكر الأول</a>
-                        
-                        
-                        `;
+
+                            ${reviewHTML}
+
+                            <!-- الأزرار تحت تفاصيل الإجابات أيضاً -->
+                            <a href="http://t.me/NaglaFG" id="telegram-study-btn-bottom" class="btn btn-study" style="margin-top: 20px;">📚 عايز اذاكر الاول</a>
+                            <button class="btn" onclick="location.reload()">🔄 إعادة الاختبار (أسئلة جديدة)</button>
+                          `;
       }
     </script>
   </body>
