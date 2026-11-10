@@ -293,6 +293,14 @@
         </option>
         <option value="teachers">مسابقة الحصة / عربي</option>
         <option value="azhar_arabic">مسابقة الأزهر عربي</option>
+        <option value="assistant_arabic">
+          معلم مساعد مادة (اللغة العربية)
+        </option>
+        <option value="assistant_math">معلم مساعد مادة (الرياضيات)</option>
+        <option value="assistant_english">
+          معلم مساعد مادة (اللغة الإنجليزية)
+        </option>
+        <option value="assistant_science">معلم مساعد مادة (العلوم)</option>
       </select>
       <label for="duration">⏳ مدة كل قسم (بالدقائق):</label>
       <input id="duration" type="number" value="5" min="1" />
@@ -7881,7 +7889,10 @@
         document.getElementById("login-container").classList.add("hidden");
 
         // تحديد الأقسام حسب المسابقة المختارة
-        if (selectedCompetition === "teachers") {
+        if (
+          selectedCompetition === "teachers" ||
+          selectedCompetition.startsWith("assistant_")
+        ) {
           sectionsOrder = allMasterSections.filter(
             (sec) => sec.id !== "english",
           );
