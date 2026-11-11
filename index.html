@@ -8825,10 +8825,16 @@
         document.getElementById("login-container").classList.add("hidden");
 
         // تحديد الأقسام حسب المسابقة المختارة
-        if (
-          selectedCompetition === "teachers" ||
-          selectedCompetition.startsWith("assistant_")
-        ) {
+        if (selectedCompetition === "teachers") {
+          sectionsOrder = [
+            ...allMasterSections.filter((sec) => sec.id !== "english"),
+            {
+              id: "azhar_specialization",
+              title: "محور التخصص",
+              data: allAzharSpecializationQuestions,
+            },
+          ];
+        } else if (selectedCompetition.startsWith("assistant_")) {
           sectionsOrder = allMasterSections.filter(
             (sec) => sec.id !== "english",
           );
